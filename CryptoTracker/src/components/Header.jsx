@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { CryptoState } from "../CryptoContext";
+import AuthModal from "./Authentication/AuthModal";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ export default function Header() {
     },
   });
 
-  const { currency, setCurrency } = CryptoState();
+  const { currency, setCurrency, user } = CryptoState();
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -52,6 +53,7 @@ export default function Header() {
               <MenuItem value={"USD"}>USD</MenuItem>
               <MenuItem value={"CNY"}>CNY</MenuItem>
             </Select>
+            {user ? "Logout" : <AuthModal />}
           </Toolbar>
         </Container>
       </AppBar>

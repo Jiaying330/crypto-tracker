@@ -5,7 +5,7 @@ import Header from "./components/Header";
 import Homepage from "./Pages/Homepage";
 import CoinPage from "./Pages/CoinPage";
 import { Box } from "@mui/material";
-// import { makeStyles } from "@mui/styles";
+import Alert1 from "./components/Alert";
 
 function App() {
   return (
@@ -23,6 +23,7 @@ function App() {
           <Route path="/coins/:id" element={<CoinPage />} />
         </Routes>
       </Box>
+      <Alert1 />
     </BrowserRouter>
   );
 }
