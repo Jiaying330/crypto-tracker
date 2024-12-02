@@ -11,6 +11,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { CryptoState } from "../CryptoContext";
 import AuthModal from "./Authentication/AuthModal";
+import UserSidebar from "./Authentication/UserSidebar";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -53,7 +54,7 @@ export default function Header() {
               <MenuItem value={"USD"}>USD</MenuItem>
               <MenuItem value={"CNY"}>CNY</MenuItem>
             </Select>
-            {user ? "Logout" : <AuthModal />}
+            {user ? <UserSidebar /> : <AuthModal />}
           </Toolbar>
         </Container>
       </AppBar>

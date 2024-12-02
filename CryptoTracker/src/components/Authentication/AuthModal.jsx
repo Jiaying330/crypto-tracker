@@ -13,6 +13,15 @@ import {
 import { useState } from "react";
 import Login from "./Login";
 import SignUp from "./SignUp";
+import GoogleButton from "react-google-button";
+import {
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
+import { auth } from "../../firebase";
+import { CryptoState } from "../../CryptoContext";
+
 const CustomModal = styled(Modal)({
   display: "flex",
   alignItems: "center",
@@ -30,19 +39,20 @@ const paperStyle = {
   boxShadow: 24,
   p: 4,
 };
-const GoogleBox = styled(Box)(() => ({
-  padding: 24,
+const GoogleBoxStyle = {
+  padding: 4,
   paddingTop: 0,
   display: "flex",
   flexDirection: "column",
   textAlign: "center",
-  gap: 20,
+  gap: 5,
   fontSize: 20,
-}));
+};
 
 export default function AuthModal() {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(0);
+  const { setAlert } = CryptoState();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -51,6 +61,26 @@ export default function AuthModal() {
     setValue(newValue);
   };
 
+  const googleProvider = new GoogleAuthProvider();
+  const signInWithGoogle = () => {
+    signInWithPopup(auth, googleProvider)
+      .then((res) => {
+        setAlert({
+          open: true,
+          message: `Sign Up Successful. Welcome ${res.user.email}`,
+          type: "success",
+        });
+        handleClose();
+      })
+      .catch((error) => {
+        setAlert({
+          open: true,
+          message: error.message,
+          type: "error",
+        });
+        return;
+      });
+  };
   return (
     <div>
       <Button
@@ -102,6 +132,13 @@ export default function AuthModal() {
             ) : (
               <SignUp handleClose={handleClose} />
             )}
+            <Box sx={GoogleBoxStyle}>
+              <span>OR</span>
+              <GoogleButton
+                style={{ width: "100%", outline: "none" }}
+                onClick={signInWithGoogle}
+              />
+            </Box>
           </Box>
         </Fade>
       </Modal>

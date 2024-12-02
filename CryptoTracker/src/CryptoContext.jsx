@@ -3,7 +3,8 @@ import PropTypes from "prop-types";
 import axios from "axios";
 import { CoinList } from "./config/api";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firebase";
+import { auth, db } from "./firebase";
+import { doc, onSnapshot } from "firebase/firestore";
 
 const Crypto = createContext();
 
@@ -22,6 +23,23 @@ export default function CryptoContext({ children }) {
     message: "",
     type: "success",
   });
+  const [watchlist, setWatchlist] = useState([]);
+
+  useEffect(() => {
+    if (user) {
+      const coinRef = doc(db, "watchlist", user.uid);
+      var unsubscribe = onSnapshot(coinRef, (coin) => {
+        if (coin.exists()) {
+          setWatchlist(coin.data().coins);
+        } else {
+          console.log("No items in the watchlist");
+        }
+      });
+      return () => {
+        unsubscribe();
+      };
+    }
+  }, [user]);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -56,6 +74,7 @@ export default function CryptoContext({ children }) {
         alert,
         setAlert,
         user,
+        watchlist,
       }}
     >
       {children}
