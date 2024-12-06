@@ -10,6 +10,10 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { CryptoState } from "../CryptoContext";
+import UserSidebar from "./Authentication/UserSidebar";
+import AuthModal from "./Authentication/AuthModal";
+import LoginButton from "./Authentication/LoginButton";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -24,6 +28,7 @@ export default function Header() {
   });
 
   const { currency, setCurrency } = CryptoState();
+  const { user, isAuthenticated } = useAuth0();
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -52,6 +57,7 @@ export default function Header() {
               <MenuItem value={"USD"}>USD</MenuItem>
               <MenuItem value={"CNY"}>CNY</MenuItem>
             </Select>
+            {isAuthenticated ? <UserSidebar /> : <LoginButton />}
           </Toolbar>
         </Container>
       </AppBar>
